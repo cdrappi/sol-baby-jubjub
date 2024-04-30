@@ -18,11 +18,12 @@ library CurveBabyJubJub {
      * y3 = (y1y2 - ax1x2) / (1 - dx1x2y1y2)
      */
     function pointAdd(uint256 _x1, uint256 _y1, uint256 _x2, uint256 _y2) internal view returns (uint256 x3, uint256 y3) {
-        if (_x1 == 0 && _y1 == 0) {
+        // If we are adding to the identity element, return early
+        if (_x1 == 0 && _y1 == 1) {
             return (_x2, _y2);
         }
 
-        if (_x2 == 0 && _y1 == 0) {
+        if (_x2 == 0 && _y2 == 1) {
             return (_x1, _y1);
         }
 
@@ -53,8 +54,10 @@ library CurveBabyJubJub {
 
         uint256 px = _x1;
         uint256 py = _y1;
+        // Initialize (ax,ay) to the identity element
+        // Reference: https://github.com/privacy-scaling-explorations/zk-kit/blob/689e6871344c19e7f78df064b62d2bf7697ae3b8/packages/baby-jubjub/src/baby-jubjub.ts#L73
         uint256 ax = 0;
-        uint256 ay = 0;
+        uint256 ay = 1;
 
         while (remaining != 0) {
             if ((remaining & 1) != 0) {
